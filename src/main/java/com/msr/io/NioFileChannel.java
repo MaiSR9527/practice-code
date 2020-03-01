@@ -1,6 +1,8 @@
 package com.msr.io;
 
+
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -27,6 +29,8 @@ public class NioFileChannel {
 
             System.out.println("================NIO文件复制================");
             nioFileChannelCopy();
+            System.out.println("==================================");
+            scatteringRead();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,16 +67,44 @@ public class NioFileChannel {
     }
 
     private static void nioFileChannelRead() throws IOException {
+        long start = System.currentTimeMillis();
         FileInputStream fileInputStream = new FileInputStream("text.txt");
         FileChannel channel = fileInputStream.getChannel();
         ByteBuffer readBuffer = ByteBuffer.allocate(1024);
         channel.read(readBuffer);
+        System.out.println(System.currentTimeMillis() - start);
         System.out.println("text.txt文件中的内容：" + new String(readBuffer.array()));
         channel.close();
         fileInputStream.close();
     }
 
+    /**
+     * 分散读取
+     */
+    public static void scatteringRead() throws IOException {
+        long start = System.currentTimeMillis();
+        FileInputStream fileInputStream = new FileInputStream("text.txt");
+        FileChannel channel = fileInputStream.getChannel();
+        ByteBuffer buffer1 = ByteBuffer.allocate(1024);
+        ByteBuffer buffer2 = ByteBuffer.allocate(1024);
+        ByteBuffer[] bufArr = {buffer1, buffer2};
+        channel.read(bufArr);
+        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(new String(bufArr[0].array(), 0, bufArr[0].limit()));
+        channel.close();
+        fileInputStream.close();
 
+    }
+
+    /**
+     * 聚集写入
+     *
+     * @throws FileNotFoundException
+     */
+    public static void gatheringWrite() throws FileNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream("text.txt");
+
+    }
 }
 
 

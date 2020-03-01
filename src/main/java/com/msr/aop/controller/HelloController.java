@@ -1,5 +1,6 @@
 package com.msr.aop.controller;
 
+import com.msr.annotation.Limiter;
 import com.msr.aop.service.HelloService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,13 @@ public class HelloController {
         return "hello AOP";
     }
 
-    public void getByReflect(){
+    public void getByReflect() {
         log.info("this is a method to test aop to reflect in controller");
+    }
+
+    @Limiter(rate = 1.0, timeOut = 200)
+    @GetMapping("/order")
+    public String order() {
+        return "order success";
     }
 }

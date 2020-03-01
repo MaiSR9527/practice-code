@@ -9,11 +9,10 @@ import java.util.Arrays;
  * @version: v1.0
  */
 
-public class Bubble {
+public class BubbleSort {
 
     public static void main(String[] args) {
         int[] a = new int[]{1, 9, 5, 6, 10};
-        long start = System.currentTimeMillis();
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a.length - i - 1; j++) {
                 if (a[j] > a[j + 1]) {
@@ -24,8 +23,5 @@ public class Bubble {
             }
         }
         Arrays.stream(a).forEach(System.out::println);
-        long end = System.currentTimeMillis();
-        long l = end - start;
-        System.out.println("time:"+l+"ms");
     }
 }

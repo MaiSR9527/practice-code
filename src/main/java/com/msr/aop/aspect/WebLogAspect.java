@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @Slf4j
-public class WebLogApsect {
+public class WebLogAspect {
 
     @Pointcut("execution(public * com.msr.aop.controller..*.*(..))")
     public void controllerLog() {

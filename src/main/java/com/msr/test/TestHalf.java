@@ -13,11 +13,11 @@ import java.text.ParseException;
 @Slf4j
 public class TestHalf {
 
+    private final int i =1;
+
 
     public static void main(String[] args) throws ParseException {
 
-
-        
 
 
         /*Date date = new Date();

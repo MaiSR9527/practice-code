@@ -9,23 +9,19 @@ import java.util.Arrays;
  * @version: v1.0
  */
 
-public class Insert {
+public class InsertSort {
 
     public static void main(String[] args) {
         int[] a = new int[]{1, 9, 5, 6, 10};
-        long start = System.currentTimeMillis();
         for (int i = 0; i < a.length; i++) {
             int index = i;
-            int temp = a[i];
-            while (index > 0 && a[index-1]>temp) {
-                a[index] = a[index-1];
+            int insertNum = a[i];
+            while (index > 0 && a[index - 1] > insertNum) {
+                a[index] = a[index - 1];
                 index--;
             }
-            a[index]=temp;
+            a[index] = insertNum;
         }
         Arrays.stream(a).forEach(System.out::println);
-        long end = System.currentTimeMillis();
-        long l = end - start;
-        System.out.println("time:"+l+"ms");
     }
 }
