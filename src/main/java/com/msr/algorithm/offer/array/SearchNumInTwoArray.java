@@ -1,4 +1,4 @@
-package com.msr.algorithm.offer;
+package com.msr.algorithm.offer.array;
 
 /**
  * @description:
@@ -27,24 +27,14 @@ public class SearchNumInTwoArray {
      * ]
      */
     public boolean searchArray(int[][] array, int target) {
-        // 校验空
-        if (array.length == 0) {
-            return false;
-        }
-        // 拿到第一行最后一列的坐标 [ 0, array[0].length-1 ]
-        int i = 0, j = array[0].length - 1;
-        // 因为竖排纵向递增， 所以当前值如果大于target， 则这列都不用比较 ， 列前移
-        while (i < array.length && j >= 0) {
-            if (array[i][j] == target) {
-                System.out.println("target:" + target + "   arr:" + array[i][j]);
-                return true;
-            }
-            if (array[i][j] > target) {
-                System.out.println("target:" + target + "   arr:" + array[i][j]);
-                j--;
-            } else {
-                i++;
-                j = array[i].length - 1;
+        for (int i = (array.length - 1); i >= 0; i--) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (array[i][j] == target) {
+                    return true;
+                }
+                if (array[i][j] > target) {
+                    break;
+                }
             }
         }
         return false;

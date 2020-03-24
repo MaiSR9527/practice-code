@@ -1,0 +1,131 @@
+package com.msr.test.process;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * @description:
+ * @author: MaiShuRen
+ * @date: 2020/3/22 17:27
+ * @version: v1.0
+ */
+
+public class Main {
+    private static int totalSucTimes = 0;
+    private static int totalFailTimes = 0;
+    private static int threadPoolSize = 32;
+    private final static Object lock = new Object();
+    private static String inviteUrl;
+
+
+    public static void main(String[] args) {
+
+        if (args.length == 0 || args.length > 2) {
+            printUsage();
+            return;
+        }
+
+        inviteUrl = args[0];
+
+        if (args.length == 2) {
+            try {
+                threadPoolSize = Integer.parseInt(args[1]);
+            } catch (Exception e) {
+                printUsage();
+                return;
+            }
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        for (int i = 0; i < threadPoolSize; i++) {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            MailHelper mailHelper = new MailHelper();
+                            ProcessOnHelper processOnHelper = new ProcessOnHelper();
+
+                            String email = mailHelper.getMailAddr();
+                            log_debug("email: " + email);
+
+                            processOnHelper.init(inviteUrl);
+
+                            if (!processOnHelper.sign(email)) {
+                                log_debug("sign ProcessOn failed");
+                                incFailTimes();
+                                return;
+                            }
+                            log_debug("sign ProcessOn suc");
+
+                            String mailUrl = null;
+                            for (int i = 0; i < 50; i++) {
+                                log_debug("try times: " + i);
+                                mailUrl = mailHelper.getVerifyMailUrl();
+                                if (mailUrl != null) break;
+                                Thread.sleep(1000);
+                            }
+                            if (mailUrl == null) {
+                                log_debug("mail not found");
+                                incFailTimes();
+                                return;
+                            }
+                            log_debug("mailUrl: " + mailUrl);
+
+
+                            String verifyUrl = mailHelper.getVerifyUrl(mailUrl);
+                            if (verifyUrl == null) {
+                                log_debug("verifyUrl not found");
+                                incFailTimes();
+                                return;
+                            }
+                            log_debug("verifyUrl: " + verifyUrl);
+
+                            if (processOnHelper.verify(verifyUrl)) {
+                                log_debug("verify suc");
+                                incSucTimes();
+                            } else {
+                                log_debug("verify failed");
+                                incFailTimes();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            incFailTimes();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private static void printUsage() {
+        System.out.println("ProcessOn Cheater");
+        System.out.println("Usage:");
+        System.out.println("  java -jar processon_cheater.jar [inviteUrl]");
+        System.out.println("  java -jar processon_cheater.jar [inviteUrl] [threadPoolSize]");
+    }
+
+    private static void log_debug(String line) {
+//        System.out.println(line);
+        System.out.flush();
+    }
+
+    private static void log_info(String line) {
+        System.out.println(line);
+        System.out.flush();
+    }
+
+    private static void incSucTimes() {
+        synchronized (lock) {
+            totalSucTimes++;
+            log_info("Suc: " + totalSucTimes + ", Fail: " + totalFailTimes);
+        }
+    }
+
+    private static void incFailTimes() {
+        synchronized (lock) {
+            totalFailTimes++;
+            log_info("Suc: " + totalSucTimes + ", Fail: " + totalFailTimes);
+        }
+    }
+}

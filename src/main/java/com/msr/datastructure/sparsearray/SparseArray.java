@@ -1,4 +1,4 @@
-package com.msr.datastructure;
+package com.msr.datastructure.sparsearray;
 
 /**
  * @description: 稀疏数组
@@ -41,5 +41,12 @@ public class SparseArray {
         sparseArr[0][1] = chessArr1[0].length;
         //存放二维数组的数据个数
         sparseArr[0][2] = sum;
+        //遍历二维数组，将非0的值存放在稀疏数组
+        int count =0;
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+
+            }
+        }
     }
 }

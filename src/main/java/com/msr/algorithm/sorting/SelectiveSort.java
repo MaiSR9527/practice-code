@@ -14,6 +14,7 @@ import java.util.Arrays;
 public class SelectiveSort {
 
     public static void main(String[] args) {
+        //慢，就算是已经排好序了，还是会再区确认。
         int[] a = new int[]{9, 21, 1, 3, 8, 11, 10, 5};
         int index;
         for (int i = 0; i < a.length; i++) {
